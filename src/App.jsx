@@ -38,7 +38,7 @@ const App = () => {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const { data } = await axiosInstance.get(`${server}/api/v1/admin`, {
+        const { data } = await axios.get(`${server}/api/v1/admin`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('lspd-admin-token')}`
           },
