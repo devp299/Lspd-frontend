@@ -9,6 +9,7 @@ import axiosInstance from '../utils/axiosInstance';
 import axios from 'axios';
 import { adminLogin, getAdmin } from '../redux/thunks/admin';
 import toast, { Toaster } from 'react-hot-toast';
+import { server } from '../constants/config';
 
 const LoginSignup = () => {
   const [activeForm, setActiveForm] = useState('login'); 
@@ -47,7 +48,7 @@ const LoginSignup = () => {
     };
   
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/user/new', { username, email, password, confirmPassword },config);
+      const response = await axios.post(`${server}/api/v1/user/new`, { username, email, password, confirmPassword },config);
       if (response.data.token) {
         localStorage.setItem('user-token', response.data.token); // Store token in localStorage
         showRespectPlus();
@@ -70,7 +71,7 @@ const LoginSignup = () => {
     const password = event.target.password.value;
   
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/user/login', { username, password });
+      const response = await axios.post(`${server}/api/v1/user/login`, { username, password });
       console.log(response);
       const token = response.data.token;
       if (token) {
@@ -94,7 +95,7 @@ const LoginSignup = () => {
     setIsLoading(true);
     const secretKey = event.target.adminPasskey.value;
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/admin/verify', { secretKey });
+      const response = await axios.post(`${server}/api/v1/admin/verify`, { secretKey });
       console.log(response);
       // toast.success("Welcome BOSS");
       if (response.data.success) {

@@ -21,6 +21,7 @@ import Transition from './hooks/Transition';
 import MostWantedList from './components/specific/MostWantedList';
 import UserNews from './components/specific/UserNews';
 import UserAllNews from './components/specific/UserAllNews';
+import { server } from './constants/config';
 
 
 const LoginSignup = lazy(() => import("./pages/LoginSignup"));
@@ -37,7 +38,7 @@ const App = () => {
   useEffect(() => {
     const checkAdmin = async () => {
       try {
-        const { data } = await axiosInstance.get('http://localhost:3000/api/v1/admin', {
+        const { data } = await axiosInstance.get(`${server}/api/v1/admin`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('lspd-admin-token')}`
           },
@@ -53,7 +54,7 @@ const App = () => {
 
     const checkAuth = async () => {
       try {
-        const { data } = await axios.get('http://localhost:3000/api/v1/user/me', {
+        const { data } = await axios.get(`${server}/api/v1/user/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('user-token')}`
           },
