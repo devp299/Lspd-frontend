@@ -1,0 +1,125 @@
+@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
+
+:root {
+  --index: calc(1vw + 1vh);
+  --text: #ffffff; /* White text */
+  --transition: transform 0.75s cubic-bezier(0.075, 0.5, 0, 1);
+}
+/* main.css */
+@keyframes swipeLeft {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes shrinkAndFade {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+.wrapper.swipe-left {
+  animation: swipeLeft 0.5s forwards;
+}
+
+.content-fade-out {
+  animation: shrinkAndFade 0.5s forwards;
+}
+.wrapper {
+    margin: 0;
+    /* height: 100px; */
+    padding: 0;
+    box-sizing: border-box;
+    transition: transform 0.5s ease-in-out;
+    background-color: #1e1e1e; /* Dark background */
+    font-family: "Russo One";
+    /* line-height: 1.55; */
+  }
+  .parallax-container {
+    height: 10vh;
+    overflow: hidden;
+  }
+  
+  .main-header {
+    z-index: 1;
+    height: calc(var(--index) * 10);
+    transition: var(--transition);
+    will-change: transform;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: var(--text);
+    text-shadow: 0 0 15px #000000; /* Dark shadow */
+    margin-top: -1rem;
+  }
+  
+  .layers__caption {
+    font-size: calc(var(--index) / 0.875);
+    letter-spacing: calc(var(--index) / 4.5);
+    margin-top: calc(var(--index) * -0.75);
+  }
+  
+  .layers__title {
+    font-size: calc(var(--index) * 2.65);
+    letter-spacing: calc(var(--index) / 2.25);
+    margin-top: -1rem;
+  }
+  
+  .main-article__content {
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+    color: white;
+  }
+  
+  .main-article__header {
+    font-size: 2rem;
+    text-transform: uppercase;
+  }
+  
+  .main-article__paragraph {
+    font-size: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .arrow-container {
+    position: absolute;
+    bottom: 20rem;
+    left: 95%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem; /* Small spacing between the arrows */
+  }
+  
+  .arrow {
+    width: 2.5rem; /* Medium size for the arrow */
+    height: 2.5rem;
+    border-right: 0.35rem solid #fff;
+    border-bottom: 0.35rem solid #fff;
+    transform: rotate(45deg);
+    cursor: pointer;
+    position: relative;
+    animation: jump 0.5s infinite alternate;
+  }
+
+  @keyframes jump {
+    0% {
+      transform: rotate(-45deg) translateY(0);
+    }
+    100% {
+      transform: rotate(-45deg) translateY(10px);
+    }
+  }
+  

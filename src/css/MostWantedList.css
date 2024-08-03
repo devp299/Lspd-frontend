@@ -1,0 +1,252 @@
+@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
+
+.most-wanted-container {
+  /* background-image: url('https://images8.alphacoders.com/587/587534.jpg'); */
+  /* position: relative;  */
+  padding: 15px;
+  width: 100%;
+  height: 100vh;
+  overflow-x: hidden;
+  font-family: "Russo One", sans-serif;
+  color: #fff;
+}
+
+
+.most-wanted-container video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.most-wanted-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.most-wanted-container h1 {
+  color: #f1c40f;
+  text-align: center;
+  font-size: 5em;
+  margin-bottom: 20px;
+  position: relative;
+  text-shadow: 3px 3px 0 #000;
+}
+
+.search-input {
+  width: 50%;
+  padding: 10px;
+  position: relative;
+  font-size: 1.2em;
+  margin-bottom: 40px;
+  border: 2px solid #000;
+  color: #000;
+  border-radius: 5px;
+  box-shadow: 5px 5px 0 #000;
+  font-family: "Russo One", sans-serif;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.most-wanted-list {
+  display: grid;
+  margin-left: 6rem;
+  margin-right: 6rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+  gap: 5rem; 
+  justify-items: center; 
+}
+
+.brutalist-card {
+  width: 100%;
+  height: auto;
+  position: relative;
+  border: 2px solid #f1c40f;
+  background-color: rgba(90, 78, 78, 0.5);
+  padding: 2rem;
+  /* box-shadow: 10px 10px 0 #000; */
+  font-family: "Russo One", sans-serif;
+  /* margin-bottom: 40px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.brutalist-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+  border-color: #ffa733;
+}
+.brutalist-card__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 2px solid #000;
+  padding-bottom: 1rem;
+}
+.brutalist-card__icon img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  /* border-radius: 50%; */
+  border: 2px solid #f1c40f;
+}
+.brutalist-card__alert {
+  background-color: #00000064;
+  border: 0.5px solid white;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 1.5em;
+  text-transform: uppercase;
+  box-shadow: 3px 5px 0 #000;
+}
+.brutalist-card__message {
+  margin: 1px 0;
+  font-size: 1.2em;
+  line-height: 1.5;
+}
+.brutalist-card__actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.brutalist-card__button {
+  background-color: #f1c40f;
+  color: #000;
+  padding: 0.5rem 1rem;
+  border: 2px solid #000;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 5px;
+  box-shadow: 3px 3px 0 #000;
+  transition: background-color 0.3s ease;
+  font-family: "Russo One", sans-serif;
+}
+.brutalist-card__button:hover {
+  background-color: #ffa733;
+}
+
+.global-tip-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 3px solid #000;
+  background-color: #ffa733;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 5px 5px 0 #000;
+  font-family: "Russo One", sans-serif;
+  z-index: 1000;
+}
+
+.global-tip-button:hover {
+  background-color: #ffa733;
+  color: #000;
+  box-shadow: 7px 7px 0 #000;
+}
+
+.global-tip-button:active {
+  transform: translate(5px, 5px);
+  box-shadow: none;
+}
+
+.wanted-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.wanted-modal-content {
+  background-color: rgba(49, 47, 43, 0.7);
+  padding: 20px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  box-shadow: 10px 10px 0 #000;
+}
+
+.wanted-close {
+  position: absolute;
+  top: -10px;
+  left: 270px;
+  color: #f1c40f;
+  cursor: pointer;
+}
+
+.wanted-modal h6 {
+  margin-bottom: 10px;
+  font-size: 2.2em;
+  text-shadow: 3px 3px 0 #000;
+  color: #fff;
+}
+
+.wanted-modal p {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.list-textArea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  color: #000;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  box-shadow: 5px 5px 0 #000;
+  font-family: "Russo One", sans-serif;
+}
+
+.no-results h3 {
+  font-size: 3em;
+  text-align: center;
+}
+
+.wanted-button {
+  display: block;
+  width: 40%;
+  padding: 10px;
+  font-size: 1.2em;
+  background-color: #f1c40f;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 5px;
+  text-transform: uppercase;
+  box-shadow: 5px 5px 0 #000;
+  font-family: "Russo One", sans-serif;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.wanted-button:hover {
+  background-color: #ffa733;
+}

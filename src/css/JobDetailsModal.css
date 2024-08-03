@@ -1,0 +1,82 @@
+.carer-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+}
+
+.carer-modal-content {
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  padding: 30px;
+  border-radius: 15px;
+  width: 40rem;
+  max-width: 90%;
+  box-shadow: 0px 5px 15px rgba(255, 204, 0, 0.3);
+  color: #fff;
+  animation: fadeInZoom 0.3s ease-out;
+  border: 2px solid #ffb463;
+}
+
+.carer-modal-content .title-career {
+  font-family: 'Pricedown','Russo One';
+  margin-top: 0;
+  font-size: 3em;
+  text-align: center;
+  color: #ffb463;
+  text-transform: uppercase;
+  /* letter-spacing: 2px; */
+}
+
+.carer-modal-content p {
+  margin: 10px 0;
+  color: #ccc;
+  line-height: 1.5;
+}
+
+.carer-modal-content p strong {
+  color: #ffb463;
+}
+
+.career-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.apply-career, .close-career {
+  margin-left: 10px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.apply-career {
+  background: #ffb463;
+  color: #000;
+}
+
+.apply-career:hover {
+  background: #ffb463;
+  transform: scale(1.05);
+}
+
+.close-career {
+  background: #333;
+  color: #fff;
+}
+
+.close-career:hover {
+  background: #444;
+  transform: scale(1.05);
+}
