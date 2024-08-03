@@ -5,7 +5,6 @@ import backgroundVideo from '../components/img/ZGU2vMWUx7gAp94_Dodge-Demon-170-4
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { adminExists, userExists } from '../redux/auth';
-import axiosInstance from '../utils/axiosInstance';
 import axios from 'axios';
 import { adminLogin, getAdmin } from '../redux/thunks/admin';
 import toast, { Toaster } from 'react-hot-toast';

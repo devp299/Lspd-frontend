@@ -1,7 +1,6 @@
 import { lazy, React, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axiosInstance from './utils/axiosInstance';
 import ProtectRoute from './components/auth/ProtectRoute';
 import ProtectAdmin from './components/auth/ProtectAdmin';
 import { adminExists, adminNotExists, userExists, userNotExists } from './redux/auth';
