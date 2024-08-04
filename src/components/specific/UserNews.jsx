@@ -189,9 +189,8 @@ const UserNews = () => {
                               <span>{announcement.likes.length}</span>
                             </div>
                             <div className="news-slider__stat">
-                              <AddCommentOutlinedIcon />
                               <AddCommentOutlinedIcon sx={{ cursor: "pointer"}} onClick={() => handleCommentClick(announcement._id)} />
-                              <span>{announcement.comment}</span>
+                              <span>{announcement.comments.length}</span>
                             </div>
                           </div>
                         </div>
