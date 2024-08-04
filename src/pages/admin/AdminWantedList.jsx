@@ -10,6 +10,7 @@ import '../../css/adminWantedList.css';
 import { IconButton } from '@mui/material';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import toast from 'react-hot-toast';
+
 const AdminWantedList = () => {
   const [wantedList, setWantedList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,6 +39,7 @@ const AdminWantedList = () => {
   const handleOpenModal = () => {
     setModalOpen(true);
   };
+
   const handleCloseModal = () => {
     setModalOpen(false);
   };
@@ -88,6 +90,7 @@ const AdminWantedList = () => {
     setEditWanted(wanted);
     setEditModalOpen(true);
   };
+
   const handlePageChange = (value) => {
     setCurrentPage(value);
   };
@@ -99,7 +102,7 @@ const AdminWantedList = () => {
 
   return (
     <AdminLayout>
-      {loading && <div className="loader"></div>} {/* Show loader */}
+      {loading && <div className="loader-admin"></div>} {/* Show loader */}
       <IconButton
         sx={{
           position: "fixed",
@@ -186,4 +189,5 @@ const AdminWantedList = () => {
     </AdminLayout>
   );
 };
+
 export default AdminWantedList;

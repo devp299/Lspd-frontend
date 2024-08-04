@@ -37,12 +37,15 @@ const UserNews = () => {
         const response = await getAllUserNews();
         if (response && response.data) {
           setAnnouncements(response.data);
+
           const likeStatusPromises = response.data.map(async (announcement) => {
             const { liked } = await checkUserLike(announcement._id);
             return { [announcement._id]: liked };
           });
+
           const likeStatuses = await Promise.all(likeStatusPromises);
           const combinedLikeStatus = likeStatuses.reduce((acc, curr) => ({ ...acc, ...curr }), {});
+
           setLikes(combinedLikeStatus);
           setIsLoading(false);
         } else {
@@ -56,6 +59,7 @@ const UserNews = () => {
 
     fetchAnnouncements();
   }, []);
+
   useEffect(() => {
     if (!isLoading) {
       const swiper = new Swiper(".news-slider", {
@@ -75,17 +79,21 @@ const UserNews = () => {
           prevEl: ".swiper-button-prev",
         },
       });
+
       return () => {
         swiper.destroy();
       };
     }
   }, [isLoading]);
+
   const handleViewAll = () => {
     navigate('/user/all-announcements');
   };
+
   const handleClose = () => {
     setSelectedAnnouncement(null);
   };
+
   const handleLike = async (announcementId) => {
     try {
       const response = await likeNews(announcementId);
@@ -153,7 +161,12 @@ const UserNews = () => {
 
   return (
     <UserLayout>
-      {loading && <div className="loader"></div>} {/* Show loader */}
+      <h1>Upcoming Events</h1>
+      {/* <video autoPlay muted loop>
+          <source src={'https://motionbgs.com/media/2534/gta-5-night-city.960x540.mp4'} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video> */}
+      {loading && <div className="loader-news"></div>} {/* Show loader */}
       <div className="gta-news-container">
         <button className="view-all-btn" onClick={handleViewAll}>
           View All
@@ -242,4 +255,5 @@ const UserNews = () => {
     </UserLayout>
   );
 }
+
 export default UserNews;

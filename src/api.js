@@ -46,7 +46,19 @@ export const getAllUserNews = async () => {
     throw error;
   }
 }
-
+export const getAdminComment = async(announcementId) => {
+  try {
+    const response = await axios.get(`http://localhost:3000/api/v1/admin/comment/${announcementId}`);
+    console.log(response);
+    // Filter comments based on the announcementId
+    const filteredComments = response.data.comments.filter(comment => comment.newsId === announcementId);
+    console.log(filteredComments);
+    return filteredComments;
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    // return [];
+  }
+}
 export const getAllWanted = async () => {
   try {
     // const token = getToken;

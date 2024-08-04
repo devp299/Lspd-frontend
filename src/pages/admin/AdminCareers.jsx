@@ -10,6 +10,7 @@ import AddJobModal from '../../components/modals/AddJobModal';
 import { getJobs, createJob, updateJob, deleteJob } from '../../api';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import toast, { Toaster } from 'react-hot-toast';
+
 const AdminCareers = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobList, setJobList] = useState([]);
@@ -37,9 +38,11 @@ const AdminCareers = () => {
     };
     fetchJobs();
   }, []);
+
   const handleOpenModal = () => {
     setModalOpen(true);
   };
+
   const handleCloseModal = () => {
     setModalOpen(false);
   };
@@ -64,13 +67,16 @@ const AdminCareers = () => {
   const handleViewDetails = (job) => {
     setSelectedJob(job);
   };
+
   const handleClose = () => {
     setSelectedJob(null);
   };
+
   const handleApply = () => {
     toast.error("You are admin. You cannot apply");
     setSelectedJob(null);
   };
+
   const handleEdit = (job) => {
     setEditingJob(job);
   };
@@ -109,7 +115,7 @@ const AdminCareers = () => {
 
   return (
       <AdminLayout>
-        {loading && <div className="loader"></div>} {/* Show loader */}
+        {loading && <div className="loader-admin"></div>} {/* Show loader */}
         {/* {error && <div className="error-message">{error}</div>} */}
         <IconButton
           sx={{
@@ -171,4 +177,5 @@ const AdminCareers = () => {
       </AdminLayout>
   );
 }
+
 export default AdminCareers;

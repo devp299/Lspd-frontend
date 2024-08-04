@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Box, IconButton, Pagination, Modal, Paper, Typography } from '@mui/material';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import CloseIcon from '@mui/icons-material/Close';
 import UserLayout from '../../components/layout/UserLayout';
-import { getAllUserNews, checkUserLike, likeNews, getComments, giveComment } from '../../api';
+import EditAnnouncementModal from '../../components/modals/EditAnnouncementModal';
+import AddNewsModal from '../../components/modals/AddNewsModal';
+import { createAnnouncement, deleteAnnouncement, getAllAnnouncements, updateAnnouncement, likeNews, getComments, giveComment, checkUserLike, getAllUserNews } from '../../api';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../../css/userAllNews.css';
 import moment from 'moment';
-import { Send as SendIcon } from '@mui/icons-material';
+import { Send as SendIcon} from '@mui/icons-material';
 import { InputBox } from '../styles/StyledComponent';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -17,7 +21,7 @@ const AllAnnouncements = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const announcementsPerPage = 12;
+  const announcementsPerPage = 6;
   const [modalOpen, setModalOpen] = useState(false);
   const [likes, setLikes] = useState({});
   const [comments, setComments] = useState([]);
@@ -32,22 +36,18 @@ const AllAnnouncements = () => {
         const response = await getAllUserNews();
         if (response && response.data && Array.isArray(response.data)) {
           const sortedAnnouncements = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-          const limitedAnnouncements = sortedAnnouncements.slice((currentPage - 1) * announcementsPerPage, currentPage * announcementsPerPage);
+          setAnnouncements(sortedAnnouncements);
 
-          const likeStatusPromises = limitedAnnouncements.map(async (announcement) => {
+          const likeStatus = {};
+          for (const announcement of sortedAnnouncements) {
             try {
               const { liked } = await checkUserLike(announcement._id);
-              return { [announcement._id]: liked };
+              likeStatus[announcement._id] = liked;
             } catch (error) {
               console.error(`Error checking like status for announcement ${announcement._id}:`, error);
-              return { [announcement._id]: false };
+              likeStatus[announcement._id] = false;
             }
-          });
-
-          const likeStatuses = await Promise.all(likeStatusPromises);
-          const likeStatus = likeStatuses.reduce((acc, status) => ({ ...acc, ...status }), {});
-
-          setAnnouncements(limitedAnnouncements);
+          }
           setLikes(likeStatus);
         } else {
           console.error('Unexpected data format:', response);
@@ -59,12 +59,11 @@ const AllAnnouncements = () => {
     };
 
     fetchAnnouncements();
-  }, [currentPage]);
+  }, []);
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
-
   const handleCloseModal = () => {
     setModalOpen(false);
   };
@@ -72,7 +71,7 @@ const AllAnnouncements = () => {
   const handleLike = async (announcementId) => {
     setLoading(true);
     try {
-      await likeNews(announcementId);
+      const response = await likeNews(announcementId);
       setAnnouncements(announcements.map(announcement =>
         announcement._id === announcementId
           ? { ...announcement, isLiked: !announcement.isLiked }
@@ -134,47 +133,54 @@ const AllAnnouncements = () => {
 
   return (
     <UserLayout>
+      <h1>All Events</h1>
+      {/* <video autoPlay muted loop>
+          <source src={'https://motionbgs.com/media/2534/gta-5-night-city.960x540.mp4'} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video> */}
       {loading && <div className="loader"></div>} {/* Show loader */}
       <Box className="user-announcements-container">
         <TransitionGroup component={null}>
-          {announcements.map((announcement) => (
-            <CSSTransition
-              key={announcement._id}
-              timeout={500}
-              classNames="announcements-card-transition"
+        {announcements.map((announcement) => (
+          <CSSTransition
+            key={announcement._id}
+            timeout={500}
+            classNames="announcements-card-transition"
+          >
+          <div key={announcement._id} className="announcement-card">
+            <div
+              className="card-image"
             >
-              <div key={announcement._id} className="announcement-card">
-                <div className="card-image">
-                  <img src={announcement.image.url} alt={announcement.title} />
-                </div>
-                <div className="card-content">
-                  <div className="card-header">
-                    <h3>{announcement.title}</h3>
+              <img src={announcement.image.url} alt={announcement.title} />
+            </div>
+            <div className="card-content">
+              <div className="card-header">
+                <h3>{announcement.title}</h3>
+              </div>
+              <div className="card-data">
+                <p>{announcement.content}</p>
+                <p><strong>Location :</strong> {announcement.location}</p>
+                <p><strong>Date & Time :</strong> {new Date(announcement.date).toLocaleString()}</p>
+              </div>
+              <div className="card-footer">
+                <div className="likes-comments">
+                  <div className='all-announcement-like'>
+                    {likes[announcement._id] ?
+                      <ThumbUpIcon onClick={() => handleLike(announcement._id)} /> :
+                      <ThumbUpOutlinedIcon onClick={() => handleLike(announcement._id)} />
+                    }
+                    <span>{announcement.likes.length}</span>
                   </div>
-                  <div className="card-data">
-                    <p>{announcement.content}</p>
-                    <p><strong>Location :</strong> {announcement.location}</p>
-                    <p><strong>Date & Time :</strong> {new Date(announcement.date).toLocaleString()}</p>
-                  </div>
-                  <div className="card-footer">
-                    <div className="likes-comments">
-                      <div className='all-announcement-like'>
-                        {likes[announcement._id] ?
-                          <ThumbUpIcon onClick={() => handleLike(announcement._id)} /> :
-                          <ThumbUpOutlinedIcon onClick={() => handleLike(announcement._id)} />
-                        }
-                        <span>{announcement.likes.length}</span>
-                      </div>
-                      <div className='all-announcement-comment'>
-                        <AddCommentOutlinedIcon onClick={() => handleCommentClick(announcement._id)} />
-                        <span>{announcement.comments.length}</span>
-                      </div>
-                    </div>
+                  <div className='all-announcement-comment'>
+                    <AddCommentOutlinedIcon onClick={() => handleCommentClick(announcement._id)} />
+                    <span>{announcement.comments.length}</span>
                   </div>
                 </div>
               </div>
-            </CSSTransition>
-          ))}
+            </div>
+          </div>
+          </CSSTransition>
+        ))}
         </TransitionGroup>
       </Box>
       <Pagination
@@ -192,7 +198,7 @@ const AllAnnouncements = () => {
               <Paper key={index} className="comment-item">
                 <Typography variant="caption" className="comment-username">{comment.userId.username}</Typography>
                 <Typography variant="body1" className='comment-text'>{comment.comment}</Typography>
-                <Typography variant="caption" className='comment-time'>
+                <Typography variant="caption" className='comment-time' >
                   {moment(comment.createdAt).fromNow()}
                 </Typography>
               </Paper>

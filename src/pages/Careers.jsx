@@ -3,6 +3,7 @@ import ApplyForm from "../components/modals/ApplyForm";
 import "../css/Careers.css";
 import UserLayout from '../components/layout/UserLayout';
 import { getAllUserJobs } from "../api";
+
 const Careers = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
@@ -28,15 +29,21 @@ const Careers = () => {
     };
     fetchJobs();    
   }, []);
+
   const handleApply = (job) => {
     setSelectedJob(job);
   };
+
   const handleCloseForm = () => {
     setSelectedJob(null);
   };
 
   return (
     <UserLayout>
+      {/* <video autoPlay muted loop>
+          <source src={'https://motionbgs.com/media/2534/gta-5-night-city.960x540.mp4'} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video> */}
     {loading && <div className="loader"></div>} {/* Show loader */}
     <div className="careers-container">
 
@@ -84,4 +91,5 @@ const Careers = () => {
     </UserLayout>
   );
 };
+
 export default Careers;
