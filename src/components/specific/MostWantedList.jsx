@@ -94,10 +94,10 @@ const MostWantedList = () => {
   return (
     <div className="most-wanted-container">
       {loading && <div className="loader"></div>} {/* Show loader */}
-      {/* <video autoPlay muted loop>
+      <video autoPlay muted loop>
         <source src={'https://motionbgs.com/media/2534/gta-5-night-city.960x540.mp4'} type="video/mp4" />
         Your browser does not support the video tag.
-      </video> */}
+      </video>
       <h1>Los Santos Most Wanted</h1>
       <input
         type="text"
