@@ -48,7 +48,7 @@ export const getAllUserNews = async () => {
 }
 export const getAdminComment = async(announcementId) => {
   try {
-    const response = await axios.get(`http://localhost:3000/api/v1/admin/comment/${announcementId}`);
+    const response = await axios.get(`${server}/api/v1/admin/comment/${announcementId}`);
     console.log(response);
     // Filter comments based on the announcementId
     const filteredComments = response.data.comments.filter(comment => comment.newsId === announcementId);
