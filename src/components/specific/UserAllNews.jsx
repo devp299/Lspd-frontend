@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Box, IconButton, Pagination, Modal, Paper, Typography } from '@mui/material';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import CloseIcon from '@mui/icons-material/Close';
 import UserLayout from '../../components/layout/UserLayout';
-import { getAllUserNews, likeNews, getComments, giveComment, checkUserLike } from '../../api';
+import { getAllUserNews, checkUserLike, likeNews, getComments, giveComment } from '../../api';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../../css/userAllNews.css';
 import moment from 'moment';
@@ -25,27 +23,31 @@ const AllAnnouncements = () => {
   const [comments, setComments] = useState([]);
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [commentsLoading, setCommentsLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
-    const fetchAnnouncementsAndLikes = async () => {
+    const fetchAnnouncements = async () => {
       setLoading(true);
       try {
         const response = await getAllUserNews();
         if (response && response.data && Array.isArray(response.data)) {
           const sortedAnnouncements = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-          setAnnouncements(sortedAnnouncements);
-          const likeStatus = {};
-          for (const announcement of sortedAnnouncements) {
+          const limitedAnnouncements = sortedAnnouncements.slice((currentPage - 1) * announcementsPerPage, currentPage * announcementsPerPage);
+
+          const likeStatusPromises = limitedAnnouncements.map(async (announcement) => {
             try {
               const { liked } = await checkUserLike(announcement._id);
-              likeStatus[announcement._id] = liked;
+              return { [announcement._id]: liked };
             } catch (error) {
               console.error(`Error checking like status for announcement ${announcement._id}:`, error);
-              likeStatus[announcement._id] = false;
+              return { [announcement._id]: false };
             }
-          }
+          });
+
+          const likeStatuses = await Promise.all(likeStatusPromises);
+          const likeStatus = likeStatuses.reduce((acc, status) => ({ ...acc, ...status }), {});
+
+          setAnnouncements(limitedAnnouncements);
           setLikes(likeStatus);
         } else {
           console.error('Unexpected data format:', response);
@@ -56,8 +58,8 @@ const AllAnnouncements = () => {
       setLoading(false);
     };
 
-    fetchAnnouncementsAndLikes();
-  }, []);
+    fetchAnnouncements();
+  }, [currentPage]);
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
@@ -68,8 +70,9 @@ const AllAnnouncements = () => {
   };
 
   const handleLike = async (announcementId) => {
+    setLoading(true);
     try {
-      const response = await likeNews(announcementId);
+      await likeNews(announcementId);
       setAnnouncements(announcements.map(announcement =>
         announcement._id === announcementId
           ? { ...announcement, isLiked: !announcement.isLiked }
@@ -83,10 +86,11 @@ const AllAnnouncements = () => {
     } catch (error) {
       toast.error('You have already liked this announcement');
     }
+    setLoading(false);
   };
 
   const fetchComments = async (announcementId) => {
-    setCommentsLoading(true);
+    setLoading(true);
     try {
       setComments([]);
       const response = await getComments(announcementId);
@@ -94,7 +98,7 @@ const AllAnnouncements = () => {
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
-    setCommentsLoading(false);
+    setLoading(false);
   };
 
   const handleCommentClick = (announcementId) => {
@@ -111,6 +115,7 @@ const AllAnnouncements = () => {
   };
 
   const handleCommentSubmit = async () => {
+    setLoading(true);
     try {
       if (newComment.trim()) {
         await giveComment({ newsId: selectedAnnouncement, comment: newComment });
@@ -124,55 +129,54 @@ const AllAnnouncements = () => {
       console.error('Error adding comment:', error);
       toast.error('Failed to add comment');
     }
+    setLoading(false);
   };
 
   return (
     <UserLayout>
       {loading && <div className="loader"></div>} {/* Show loader */}
-      {!loading && (
-        <Box className="user-announcements-container">
-          <TransitionGroup component={null}>
-            {announcements.map((announcement) => (
-              <CSSTransition
-                key={announcement._id}
-                timeout={500}
-                classNames="announcements-card-transition"
-              >
-                <div key={announcement._id} className="announcement-card">
-                  <div className="card-image">
-                    <img src={announcement.image.url} alt={announcement.title} />
+      <Box className="user-announcements-container">
+        <TransitionGroup component={null}>
+          {announcements.map((announcement) => (
+            <CSSTransition
+              key={announcement._id}
+              timeout={500}
+              classNames="announcements-card-transition"
+            >
+              <div key={announcement._id} className="announcement-card">
+                <div className="card-image">
+                  <img src={announcement.image.url} alt={announcement.title} />
+                </div>
+                <div className="card-content">
+                  <div className="card-header">
+                    <h3>{announcement.title}</h3>
                   </div>
-                  <div className="card-content">
-                    <div className="card-header">
-                      <h3>{announcement.title}</h3>
-                    </div>
-                    <div className="card-data">
-                      <p>{announcement.content}</p>
-                      <p><strong>Location :</strong> {announcement.location}</p>
-                      <p><strong>Date & Time :</strong> {new Date(announcement.date).toLocaleString()}</p>
-                    </div>
-                    <div className="card-footer">
-                      <div className="likes-comments">
-                        <div className='all-announcement-like'>
-                          {likes[announcement._id] ?
-                            <ThumbUpIcon onClick={() => handleLike(announcement._id)} /> :
-                            <ThumbUpOutlinedIcon onClick={() => handleLike(announcement._id)} />
-                          }
-                          <span>{announcement.likes.length}</span>
-                        </div>
-                        <div className='all-announcement-comment'>
-                          <AddCommentOutlinedIcon onClick={() => handleCommentClick(announcement._id)} />
-                          <span>{announcement.comments.length}</span>
-                        </div>
+                  <div className="card-data">
+                    <p>{announcement.content}</p>
+                    <p><strong>Location :</strong> {announcement.location}</p>
+                    <p><strong>Date & Time :</strong> {new Date(announcement.date).toLocaleString()}</p>
+                  </div>
+                  <div className="card-footer">
+                    <div className="likes-comments">
+                      <div className='all-announcement-like'>
+                        {likes[announcement._id] ?
+                          <ThumbUpIcon onClick={() => handleLike(announcement._id)} /> :
+                          <ThumbUpOutlinedIcon onClick={() => handleLike(announcement._id)} />
+                        }
+                        <span>{announcement.likes.length}</span>
+                      </div>
+                      <div className='all-announcement-comment'>
+                        <AddCommentOutlinedIcon onClick={() => handleCommentClick(announcement._id)} />
+                        <span>{announcement.comments.length}</span>
                       </div>
                     </div>
                   </div>
                 </div>
-              </CSSTransition>
-            ))}
-          </TransitionGroup>
-        </Box>
-      )}
+              </div>
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
+      </Box>
       <Pagination
         count={Math.ceil(announcements.length / announcementsPerPage)}
         page={currentPage}
@@ -183,21 +187,17 @@ const AllAnnouncements = () => {
           <IconButton className="modal-comment-close" onClick={handleCloseCommentModal}>
             <CloseIcon />
           </IconButton>
-          {commentsLoading ? (
-            <div className="loader"></div>
-          ) : (
-            <Box className="comment-list">
-              {comments.map((comment, index) => (
-                <Paper key={index} className="comment-item">
-                  <Typography variant="caption" className="comment-username">{comment.userId.username}</Typography>
-                  <Typography variant="body1" className='comment-text'>{comment.comment}</Typography>
-                  <Typography variant="caption" className='comment-time'>
-                    {moment(comment.createdAt).fromNow()}
-                  </Typography>
-                </Paper>
-              ))}
-            </Box>
-          )}
+          <Box className="comment-list">
+            {comments.map((comment, index) => (
+              <Paper key={index} className="comment-item">
+                <Typography variant="caption" className="comment-username">{comment.userId.username}</Typography>
+                <Typography variant="body1" className='comment-text'>{comment.comment}</Typography>
+                <Typography variant="caption" className='comment-time'>
+                  {moment(comment.createdAt).fromNow()}
+                </Typography>
+              </Paper>
+            ))}
+          </Box>
           <Box className="comment-input">
             <InputBox
               type="text"
