@@ -17,7 +17,7 @@ const AllAnnouncements = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const announcementsPerPage = 6;
+  const announcementsPerPage = 12;
   const [modalOpen, setModalOpen] = useState(false);
   const [likes, setLikes] = useState({});
   const [comments, setComments] = useState([]);
