@@ -7,15 +7,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import CloseIcon from '@mui/icons-material/Close';
 import UserLayout from '../../components/layout/UserLayout';
-import EditAnnouncementModal from '../../components/modals/EditAnnouncementModal';
-import AddNewsModal from '../../components/modals/AddNewsModal';
-import { createAnnouncement, deleteAnnouncement, getAllAnnouncements, updateAnnouncement, likeNews, getComments, giveComment, checkUserLike, getAllUserNews } from '../../api';
+import { getAllUserNews, likeNews, getComments, giveComment, checkUserLike } from '../../api';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../../css/userAllNews.css';
 import moment from 'moment';
-import { Send as SendIcon} from '@mui/icons-material';
+import { Send as SendIcon } from '@mui/icons-material';
 import { InputBox } from '../styles/StyledComponent';
 import toast, { Toaster } from 'react-hot-toast';
+
 const AllAnnouncements = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
@@ -26,10 +25,11 @@ const AllAnnouncements = () => {
   const [comments, setComments] = useState([]);
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [commentsLoading, setCommentsLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
-    const fetchAnnouncements = async () => {
+    const fetchAnnouncementsAndLikes = async () => {
       setLoading(true);
       try {
         const response = await getAllUserNews();
@@ -56,17 +56,18 @@ const AllAnnouncements = () => {
       setLoading(false);
     };
 
-    fetchAnnouncements();
+    fetchAnnouncementsAndLikes();
   }, []);
+
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
+
   const handleCloseModal = () => {
     setModalOpen(false);
   };
 
   const handleLike = async (announcementId) => {
-    setLoading(true);
     try {
       const response = await likeNews(announcementId);
       setAnnouncements(announcements.map(announcement =>
@@ -82,11 +83,10 @@ const AllAnnouncements = () => {
     } catch (error) {
       toast.error('You have already liked this announcement');
     }
-    setLoading(false);
   };
 
   const fetchComments = async (announcementId) => {
-    setLoading(true);
+    setCommentsLoading(true);
     try {
       setComments([]);
       const response = await getComments(announcementId);
@@ -94,7 +94,7 @@ const AllAnnouncements = () => {
     } catch (error) {
       console.error('Error fetching comments:', error);
     }
-    setLoading(false);
+    setCommentsLoading(false);
   };
 
   const handleCommentClick = (announcementId) => {
@@ -102,6 +102,7 @@ const AllAnnouncements = () => {
     setSelectedAnnouncement(announcementId);
     setCommentModalOpen(true);
   };
+
   const handleCloseCommentModal = () => {
     setCommentModalOpen(false);
     setNewComment("");
@@ -110,7 +111,6 @@ const AllAnnouncements = () => {
   };
 
   const handleCommentSubmit = async () => {
-    setLoading(true);
     try {
       if (newComment.trim()) {
         await giveComment({ newsId: selectedAnnouncement, comment: newComment });
@@ -124,56 +124,55 @@ const AllAnnouncements = () => {
       console.error('Error adding comment:', error);
       toast.error('Failed to add comment');
     }
-    setLoading(false);
   };
 
   return (
     <UserLayout>
       {loading && <div className="loader"></div>} {/* Show loader */}
-      <Box className="user-announcements-container">
-        <TransitionGroup component={null}>
-        {announcements.map((announcement) => (
-          <CSSTransition
-            key={announcement._id}
-            timeout={500}
-            classNames="announcements-card-transition"
-          >
-          <div key={announcement._id} className="announcement-card">
-            <div
-              className="card-image"
-            >
-              <img src={announcement.image.url} alt={announcement.title} />
-            </div>
-            <div className="card-content">
-              <div className="card-header">
-                <h3>{announcement.title}</h3>
-              </div>
-              <div className="card-data">
-                <p>{announcement.content}</p>
-                <p><strong>Location :</strong> {announcement.location}</p>
-                <p><strong>Date & Time :</strong> {new Date(announcement.date).toLocaleString()}</p>
-              </div>
-              <div className="card-footer">
-                <div className="likes-comments">
-                  <div className='all-announcement-like'>
-                    {likes[announcement._id] ?
-                      <ThumbUpIcon onClick={() => handleLike(announcement._id)} /> :
-                      <ThumbUpOutlinedIcon onClick={() => handleLike(announcement._id)} />
-                    }
-                    <span>{announcement.likes.length}</span>
+      {!loading && (
+        <Box className="user-announcements-container">
+          <TransitionGroup component={null}>
+            {announcements.map((announcement) => (
+              <CSSTransition
+                key={announcement._id}
+                timeout={500}
+                classNames="announcements-card-transition"
+              >
+                <div key={announcement._id} className="announcement-card">
+                  <div className="card-image">
+                    <img src={announcement.image.url} alt={announcement.title} />
                   </div>
-                  <div className='all-announcement-comment'>
-                    <AddCommentOutlinedIcon onClick={() => handleCommentClick(announcement._id)} />
-                    <span>{announcement.comments.length}</span>
+                  <div className="card-content">
+                    <div className="card-header">
+                      <h3>{announcement.title}</h3>
+                    </div>
+                    <div className="card-data">
+                      <p>{announcement.content}</p>
+                      <p><strong>Location :</strong> {announcement.location}</p>
+                      <p><strong>Date & Time :</strong> {new Date(announcement.date).toLocaleString()}</p>
+                    </div>
+                    <div className="card-footer">
+                      <div className="likes-comments">
+                        <div className='all-announcement-like'>
+                          {likes[announcement._id] ?
+                            <ThumbUpIcon onClick={() => handleLike(announcement._id)} /> :
+                            <ThumbUpOutlinedIcon onClick={() => handleLike(announcement._id)} />
+                          }
+                          <span>{announcement.likes.length}</span>
+                        </div>
+                        <div className='all-announcement-comment'>
+                          <AddCommentOutlinedIcon onClick={() => handleCommentClick(announcement._id)} />
+                          <span>{announcement.comments.length}</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          </CSSTransition>
-        ))}
-        </TransitionGroup>
-      </Box>
+              </CSSTransition>
+            ))}
+          </TransitionGroup>
+        </Box>
+      )}
       <Pagination
         count={Math.ceil(announcements.length / announcementsPerPage)}
         page={currentPage}
@@ -184,17 +183,21 @@ const AllAnnouncements = () => {
           <IconButton className="modal-comment-close" onClick={handleCloseCommentModal}>
             <CloseIcon />
           </IconButton>
-          <Box className="comment-list">
-            {comments.map((comment, index) => (
-              <Paper key={index} className="comment-item">
-                <Typography variant="caption" className="comment-username">{comment.userId.username}</Typography>
-                <Typography variant="body1" className='comment-text'>{comment.comment}</Typography>
-                <Typography variant="caption" className='comment-time' >
-                  {moment(comment.createdAt).fromNow()}
-                </Typography>
-              </Paper>
-            ))}
-          </Box>
+          {commentsLoading ? (
+            <div className="loader"></div>
+          ) : (
+            <Box className="comment-list">
+              {comments.map((comment, index) => (
+                <Paper key={index} className="comment-item">
+                  <Typography variant="caption" className="comment-username">{comment.userId.username}</Typography>
+                  <Typography variant="body1" className='comment-text'>{comment.comment}</Typography>
+                  <Typography variant="caption" className='comment-time'>
+                    {moment(comment.createdAt).fromNow()}
+                  </Typography>
+                </Paper>
+              ))}
+            </Box>
+          )}
           <Box className="comment-input">
             <InputBox
               type="text"
@@ -212,4 +215,5 @@ const AllAnnouncements = () => {
     </UserLayout>
   );
 };
+
 export default AllAnnouncements;
