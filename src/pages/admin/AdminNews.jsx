@@ -149,9 +149,10 @@ const AdminNews = () => {
 
   return (
     <AdminLayout>
+      <h1>Upcoming Events</h1>
       {loading && <div className="loader-admin"></div>} {/* Show loader */}
       <div className="gta-news-container">
-        <button className="view-all-btn" onClick={handleViewAll}>
+        <button className="view-all-admin-btn" onClick={handleViewAll}>
           View All
         </button>
         <div className="news-slider">

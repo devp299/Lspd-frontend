@@ -38,7 +38,7 @@ const AdminTips = () => {
   return (
     <div className="admin-tips-container">
       {loading && <div className='loader-admin'></div>}
-      <h1 className="tips-title">Crime Tips</h1>
+      <h4 className="tips-title">Crime Tips</h4>
       <div className="tips-list">
         <TransitionGroup component={null}>
         {tips.map((tip) => (
