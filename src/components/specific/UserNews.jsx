@@ -237,13 +237,6 @@ const UserNews = () => {
           <div className="swiper-button-prev"></div>
           <div className="news-slider__pagination"></div>
         </div>
-        {selectedAnnouncement &&
-          <EditAnnouncementModal
-            announcement={selectedAnnouncement}
-            onUpdate={handleUpdate}
-            onClose={handleClose}
-          />
-        }
       </div>
       <Toaster/>
     </UserLayout>
