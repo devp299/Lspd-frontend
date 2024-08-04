@@ -7,36 +7,45 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 import { IconButton } from "@mui/material";
 import { Delete as DeleteIcon } from "@mui/icons-material";
+import { Box, IconButton, Modal, Paper, Typography } from "@mui/material";
+import { Delete as DeleteIcon,Send as SendIcon } from "@mui/icons-material";
+import CloseIcon from '@mui/icons-material/Close';
 import UserLayout from '../../components/layout/UserLayout';
 import "../../css/userNews.css";
 import EditAnnouncementModal from "../../components/modals/EditAnnouncementModal";
+import { InputBox } from '../styles/StyledComponent';
 import { useNavigate } from "react-router-dom";
 import { checkUserLike, getAllUserNews, likeNews } from "../../api";
+import { checkUserLike, getAllUserNews, getComments, giveComment, likeNews } from "../../api";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import toast, { Toaster } from "react-hot-toast";
+import moment from "moment";
 
 const UserNews = () => {
   const [announcements, setAnnouncements] = useState([]);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [likes, setLikes] = useState({});
+  const [comments, setComments] = useState([]);
+  const [commentModalOpen, setCommentModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [newComment, setNewComment] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
+      setLoading(true);
       try {
         const response = await getAllUserNews();
         if (response && response.data) {
           setAnnouncements(response.data);
-
           const likeStatusPromises = response.data.map(async (announcement) => {
             const { liked } = await checkUserLike(announcement._id);
             return { [announcement._id]: liked };
           });
-
           const likeStatuses = await Promise.all(likeStatusPromises);
           const combinedLikeStatus = likeStatuses.reduce((acc, curr) => ({ ...acc, ...curr }), {});
-
           setLikes(combinedLikeStatus);
           setIsLoading(false);
         } else {
@@ -45,11 +54,11 @@ const UserNews = () => {
       } catch (error) {
         console.error('Error fetching announcements:', error);
       }
+      setLoading(false);
     };
 
     fetchAnnouncements();
   }, []);
-
   useEffect(() => {
     if (!isLoading) {
       const swiper = new Swiper(".news-slider", {
@@ -69,21 +78,17 @@ const UserNews = () => {
           prevEl: ".swiper-button-prev",
         },
       });
-
       return () => {
         swiper.destroy();
       };
     }
   }, [isLoading]);
-
   const handleViewAll = () => {
     navigate('/user/all-announcements');
   };
-
   const handleClose = () => {
     setSelectedAnnouncement(null);
   };
-
   const handleLike = async (announcementId) => {
     try {
       const response = await likeNews(announcementId);
@@ -101,7 +106,48 @@ const UserNews = () => {
       toast.error('You have already liked this announcement');
     }
   };
+  const fetchComments = async (announcementId) => {
+    setLoading(true);
+    try {
+      setComments([]);
+      const response = await getComments(announcementId);
+      setComments(response);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+    setLoading(false);
+  };
 
+  const handleCommentClick = (announcementId) => {
+    fetchComments(announcementId);
+    setSelectedAnnouncement(announcementId);
+    setCommentModalOpen(true);
+  };
+
+  const handleCloseCommentModal = () => {
+    setCommentModalOpen(false);
+    setNewComment("");
+    setComments([]);
+    setSelectedAnnouncement(null);
+  };
+
+  const handleCommentSubmit = async () => {
+    setLoading(true);
+    try {
+      if (newComment.trim()) {
+        await giveComment({ newsId: selectedAnnouncement, comment: newComment });
+        fetchComments(selectedAnnouncement);
+        setNewComment("");
+        toast.success('Comment added!');
+      } else {
+        toast.error('Comment cannot be empty');
+      }
+    } catch (error) {
+      console.error('Error adding comment:', error);
+      toast.error('Failed to add comment');
+    }
+    setLoading(false);
+  };
   const getUpcomingEvents = () => {
     const sortedAnnouncements = announcements.sort((a, b) => new Date(a.date) - new Date(b.date));
     const currentDate = new Date();
@@ -110,6 +156,7 @@ const UserNews = () => {
 
   return (
     <UserLayout>
+      {loading && <div className="loader"></div>} {/* Show loader */}
       <div className="gta-news-container">
         <button className="view-all-btn" onClick={handleViewAll}>
           View All
@@ -139,13 +186,14 @@ const UserNews = () => {
                           <div className="news-slider__stats">
                             <div className="news-slider__stat">
                               {likes[announcement._id] ?
-                                <ThumbUpIcon onClick={() => handleLike(announcement._id)} /> :
-                                <ThumbUpOutlinedIcon onClick={() => handleLike(announcement._id)} />
+                                <ThumbUpIcon sx={{ cursor: "pointer"}} onClick={() => handleLike(announcement._id)} /> :
+                                <ThumbUpOutlinedIcon sx={{ cursor: "pointer"}} onClick={() => handleLike(announcement._id)} />
                               }
                               <span>{announcement.likes.length}</span>
                             </div>
                             <div className="news-slider__stat">
                               <AddCommentOutlinedIcon />
+                              <AddCommentOutlinedIcon sx={{ cursor: "pointer"}} onClick={() => handleCommentClick(announcement._id)} />
                               <span>{announcement.comment}</span>
                             </div>
                           </div>
@@ -160,6 +208,35 @@ const UserNews = () => {
               ))}
             </TransitionGroup>
           </div>
+          <Modal open={commentModalOpen} onClose={handleCloseCommentModal}>
+        <Box className="modal-comment-content">
+          <IconButton className="modal-comment-close" onClick={handleCloseCommentModal}>
+            <CloseIcon />
+          </IconButton>
+          <Box className="comment-list">
+            {comments.map((comment, index) => (
+              <Paper key={index} className="comment-item">
+                <Typography variant="caption" className="comment-username">{comment.userId.username}</Typography>
+                <Typography variant="body1" className='comment-text'>{comment.comment}</Typography>
+                <Typography variant="caption" className='comment-time' >
+                  {moment(comment.createdAt).fromNow()}
+                </Typography>
+              </Paper>
+            ))}
+          </Box>
+          <Box className="comment-input">
+            <InputBox
+              type="text"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Add a comment..."
+            />
+            <IconButton onClick={handleCommentSubmit}>
+              <SendIcon />
+            </IconButton>
+          </Box>
+        </Box>
+      </Modal>
           <div className="swiper-button-next"></div>
           <div className="swiper-button-prev"></div>
           <div className="news-slider__pagination"></div>
@@ -176,5 +253,4 @@ const UserNews = () => {
     </UserLayout>
   );
 }
-
 export default UserNews;

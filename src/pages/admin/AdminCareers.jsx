@@ -10,16 +10,17 @@ import AddJobModal from '../../components/modals/AddJobModal';
 import { getJobs, createJob, updateJob, deleteJob } from '../../api';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import toast, { Toaster } from 'react-hot-toast';
-
 const AdminCareers = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobList, setJobList] = useState([]);
   const [editingJob, setEditingJob] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchJobs = async () => {
+      setLoading(true); // Start loading
       try {
         const response = await getJobs();
         if (response.success && Array.isArray(response.data)) {
@@ -32,19 +33,19 @@ const AdminCareers = () => {
         setError(error.message);
         console.error("Error fetching jobs:", error);
       }
+      setLoading(false); // Stop loading
     };
     fetchJobs();
   }, []);
-
   const handleOpenModal = () => {
     setModalOpen(true);
   };
-
   const handleCloseModal = () => {
     setModalOpen(false);
   };
 
   const handleCreateJob = async (newJob) => {
+    setLoading(true); // Start loading
     try {
       const createdJob = await createJob(newJob);
       if (createdJob.success) {
@@ -57,26 +58,25 @@ const AdminCareers = () => {
       toast.error(error.response.data.message);
       console.error("Error creating job:", error);
     }
+    setLoading(false); // Stop loading
   };
 
   const handleViewDetails = (job) => {
     setSelectedJob(job);
   };
-
   const handleClose = () => {
     setSelectedJob(null);
   };
-
   const handleApply = () => {
     toast.error("You are admin. You cannot apply");
     setSelectedJob(null);
   };
-
   const handleEdit = (job) => {
     setEditingJob(job);
   };
 
   const handleSaveEdit = async (updatedJob) => {
+    setLoading(true); // Start loading
     try {
       const response = await updateJob(updatedJob._id, updatedJob);
       if (response.success) {
@@ -89,9 +89,11 @@ const AdminCareers = () => {
       setError(error.message);
       console.error("Error updating job:", error);
     }
+    setLoading(false); // Stop loading
   };
 
   const handleDelete = async (jobId) => {
+    setLoading(true); // Start loading
     try {
       const response = await deleteJob(jobId);
       if (response.success) {
@@ -102,10 +104,12 @@ const AdminCareers = () => {
     } catch (error) {
       console.error("Error deleting job:", error);
     }
+    setLoading(false); // Stop loading
   };
 
   return (
       <AdminLayout>
+        {loading && <div className="loader"></div>} {/* Show loader */}
         {/* {error && <div className="error-message">{error}</div>} */}
         <IconButton
           sx={{
@@ -167,5 +171,4 @@ const AdminCareers = () => {
       </AdminLayout>
   );
 }
-
 export default AdminCareers;

@@ -10,7 +10,6 @@ import '../../css/adminWantedList.css';
 import { IconButton } from '@mui/material';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import toast from 'react-hot-toast';
-
 const AdminWantedList = () => {
   const [wantedList, setWantedList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,29 +17,33 @@ const AdminWantedList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editWanted, setEditWanted] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchWantedList();
   }, []);
 
   const fetchWantedList = async () => {
+    setLoading(true); // Start loading
     try {
       const response = await getList();
       setWantedList(response);
     } catch (error) {
       console.error('Error fetching wanted list:', error);
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
   const handleOpenModal = () => {
     setModalOpen(true);
   };
-
   const handleCloseModal = () => {
     setModalOpen(false);
   };
 
   const handleCreateWanted = async (newWanted) => {
+    setLoading(true); // Start loading
     try {
       const response = await createListItem(newWanted);
       setWantedList([response, ...wantedList]);
@@ -49,6 +52,7 @@ const AdminWantedList = () => {
       // toast.error(error.response.data.message);
       console.error('Error creating wanted item:', error);
     }
+    setLoading(false); // Stop loading
   };
 
   const handleEditCloseModal = () => {
@@ -57,6 +61,8 @@ const AdminWantedList = () => {
   };
 
   const handleEditWanted = async (updatedWanted) => {
+    setLoading(true); // Start loading
+
     try {
       const response = await updateList(updatedWanted._id, updatedWanted);
       setWantedList(wantedList.map(wanted => wanted._id === updatedWanted._id ? response : wanted));
@@ -64,25 +70,28 @@ const AdminWantedList = () => {
     } catch (error) {
       console.error('Error updating wanted item:', error);
     }
+    setLoading(false); // Stop loading
   };
 
   const handleDeleteWanted = async (listId) => {
+    setLoading(true); // Start loading
     try {
       await deleteList(listId);
       setWantedList(wantedList.filter(wanted => wanted._id !== listId));
     } catch (error) {
       console.error("Error deleting job:", error);
     }
+    setLoading(false); // Stop loading
   };
 
   const handleEditCriminals = (wanted) => {
     setEditWanted(wanted);
     setEditModalOpen(true);
   };
-
   const handlePageChange = (value) => {
     setCurrentPage(value);
   };
+
 
   // const indexOfLastItem = currentPage * itemsPerPage;
   // const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -90,6 +99,7 @@ const AdminWantedList = () => {
 
   return (
     <AdminLayout>
+      {loading && <div className="loader"></div>} {/* Show loader */}
       <IconButton
         sx={{
           position: "fixed",
@@ -176,5 +186,4 @@ const AdminWantedList = () => {
     </AdminLayout>
   );
 };
-
 export default AdminWantedList;

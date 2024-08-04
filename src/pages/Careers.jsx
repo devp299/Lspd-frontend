@@ -3,13 +3,14 @@ import ApplyForm from "../components/modals/ApplyForm";
 import "../css/Careers.css";
 import UserLayout from '../components/layout/UserLayout';
 import { getAllUserJobs } from "../api";
-
 const Careers = () => {
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchJobs = async () => {
+      setLoading(true);
       try {
         const response = await getAllUserJobs();
         if (response.success && Array.isArray(response.data)) {
@@ -23,20 +24,20 @@ const Careers = () => {
         setError(error.message);
         console.error("Error fetching jobs:", error);
       }
+      setLoading(false);
     };
     fetchJobs();    
   }, []);
-
   const handleApply = (job) => {
     setSelectedJob(job);
   };
-
   const handleCloseForm = () => {
     setSelectedJob(null);
   };
 
   return (
     <UserLayout>
+    {loading && <div className="loader"></div>} {/* Show loader */}
     <div className="careers-container">
 
         {/* <video autoPlay muted loop>
@@ -83,5 +84,4 @@ const Careers = () => {
     </UserLayout>
   );
 };
-
 export default Careers;

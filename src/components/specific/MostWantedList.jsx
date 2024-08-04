@@ -4,7 +4,6 @@ import { getAllWanted, giveTip } from "../../api";
 import toast, { Toaster } from "react-hot-toast";
 import {IconButton} from '@mui/material';
 import { Close as CloseIcon} from '@mui/icons-material';
-
 const MostWantedList = () => {
   const [mostWanted, setMostWanted] = useState([]);
   const [filteredWanted, setFilteredWanted] = useState([]);
@@ -13,9 +12,11 @@ const MostWantedList = () => {
   const [isTipModalOpen, setIsTipModalOpen] = useState(false);
   const [tip, setTip] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchList = async () => {
+      setLoading(true);
       try {
         const response = await getAllWanted();
         if (response.status === 200) {
@@ -29,25 +30,22 @@ const MostWantedList = () => {
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
+      setLoading(false);
     };
     fetchList();  
   }, []);
-
   const openModal = (criminal) => {
     setSelectedCriminal(criminal);
     setIsModalOpen(true);
   };
-
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedCriminal(null);
   };
-
   const openTipModal = (criminal) => {
     setSelectedCriminal(criminal);
     setIsTipModalOpen(true);
   };
-
   const closeTipModal = () => {
     setIsTipModalOpen(false);
     setSelectedCriminal(null);
@@ -56,6 +54,7 @@ const MostWantedList = () => {
 
   const handleTipSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await giveTip({message: tip});
       if (response.data.success) {
@@ -67,6 +66,7 @@ const MostWantedList = () => {
     } catch (error) {
       console.log('An error occurred',error);
     }
+    setLoading(false);
   };
 
   const handleSearchChange = (e) => {
@@ -84,6 +84,7 @@ const MostWantedList = () => {
 
   return (
     <div className="most-wanted-container">
+      {loading && <div className="loader"></div>} {/* Show loader */}
       <video autoPlay muted loop>
           <source src={'https://motionbgs.com/media/2534/gta-5-night-city.960x540.mp4'} type="video/mp4" />
           Your browser does not support the video tag.
@@ -196,5 +197,4 @@ const MostWantedList = () => {
     </div>
   );
 };
-
 export default MostWantedList;
