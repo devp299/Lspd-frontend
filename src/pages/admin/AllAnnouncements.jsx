@@ -27,6 +27,9 @@ const AllAnnouncements = () => {
   const [commentModalOpen, setCommentModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [commentAnnouncement, setCommentAnnouncement] = useState(null);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
+
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
@@ -158,6 +161,16 @@ const AllAnnouncements = () => {
     setModalOpen(false);
   };
 
+  const handleImageClick = (imageUrl) => {
+    setSelectedImageUrl(imageUrl);
+    setImageModalOpen(true);
+  };
+
+  const handleCloseImageModal = () => {
+    setImageModalOpen(false);
+    setSelectedImageUrl("");
+  };
+
   return (
     <AdminLayout>
       {loading && <div className="loader-admin"></div>} {/* Show loader */}
@@ -195,7 +208,7 @@ const AllAnnouncements = () => {
             classNames="announcements-card-transition"
           >
           <div key={announcement._id} className="announcement-card">
-            <div className="card-image">
+            <div className="card-image" onClick={() => handleImageClick(announcement.image.url)}>
               <img src={announcement.image.url} alt={announcement.title} />
             </div>
             <div className="card-content">
@@ -265,6 +278,14 @@ const AllAnnouncements = () => {
       )}
       <AddNewsModal open={modalOpen} onClose={handleCloseModal} onCreate={handleCreateNews} />
       <Toaster/>
+      <Modal open={imageModalOpen} onClose={handleCloseImageModal}>
+            <Box className="modal-image-content">
+              <IconButton className="modal-image-close" onClick={handleCloseImageModal}>
+                <Close />
+              </IconButton>
+              <img src={selectedImageUrl} alt="Full-size" className="modal-full-image" />
+          </Box>
+        </Modal>
       <Dialog
         open={deleteDialogOpen}
         onClose={closeDeleteDialog}

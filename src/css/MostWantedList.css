@@ -200,23 +200,49 @@
 }
 
 .wanted-modal-content {
-  position: relative; /* Ensure child elements like the close button are positioned relative to this container */
+  position: absolute; /* Ensure child elements like the close button are positioned relative to this container */
+  /* top: 5%;
+  left: 30%; */
   background-color: #2c2c2c;
   padding: 20px;
   border: 2px solid #000;
   border-radius: 10px;
   width: 90%;
   max-width: 600px;
+  /* max-height: 90vh; */
+  text-align: center;
+  box-shadow: 10px 10px 0 #000;
+}
+
+.wanted-tip-modal-content{
+  position: absolute; /* Ensure child elements like the close button are positioned relative to this container */
+  /* top: 5%;
+  left: 30%; */
+  background-color: #2c2c2c;
+  padding: 20px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  /* max-height: 90vh; */
   text-align: center;
   box-shadow: 10px 10px 0 #000;
 }
 
 .wanted-close {
-  position: fixed;
+  align-self: flex-end;
+  /* position: fixed; */
   /* margin-top: 32rem;
   margin-right: 20rem; */
-  top: -100px; 
-  left: 79px;
+  top: -10px; 
+  left: 17rem; 
+  color: #ffb463;
+  cursor: pointer;
+}
+
+.wanted-tip-close{
+  align-self: flex-end;
+  left: 17rem;
   color: #ffb463;
   cursor: pointer;
 }
@@ -230,6 +256,10 @@
 
 .wanted-modal-content button {
   color: #ffb463;
+}
+
+.wanted-tip-modal-content button {
+  color: #000;
 }
 
 .wanted-modal p {
@@ -285,4 +315,17 @@
 
 .wanted-button:hover {
   background-color: #da881e;
+}
+
+@media (max-width: 500px) {
+  .wanted-close {
+    align-self: flex-end;
+    /* position: fixed; */
+    /* margin-top: 32rem;
+    margin-right: 20rem; */
+    top: 1px; 
+    left: 10rem; 
+    color: #ffb463;
+    cursor: pointer;
+  }
 }

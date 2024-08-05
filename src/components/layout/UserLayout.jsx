@@ -37,7 +37,7 @@ const adminTabs = [
   },
 ];
 
-const SideBar = ({ w = "100%" }) => {
+const SideBar = ({ w }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -214,12 +214,26 @@ const AdminLayout = ({ children }) => {
         onClose={handleClose}
         PaperProps={{
           sx: {
+            width: {md: "30vw",xs: "80vw",},
             backgroundColor: "#1a1a1a",
           },
         }}
       >
-        <SideBar w="30vw" />
+        <SideBar width="100vw" />
       </Drawer>
+      {/* <Box
+        sx={{
+          display: { xs: "none", md: "block" },
+          width: { md: "20vw" },
+          position: "fixed",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          backgroundColor: "#1a1a1a",
+        }}
+      >
+        <SideBar width="20vw" />
+      </Box> */}
     </Grid>
   );
 };

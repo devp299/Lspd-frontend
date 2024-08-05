@@ -167,6 +167,9 @@ const MostWantedList = () => {
       {isModalOpen && (
         <div className="wanted-modal" onClick={closeModal}>
           <div className="wanted-modal-content" onClick={(e) => e.stopPropagation()}>
+          <IconButton className="wanted-close" onClick={closeModal}>
+            <CloseIcon />
+          </IconButton>
           <div className="brutalist-card__icon wanted-modal-image">
                   <img
                     src={selectedCriminal.image.url}
@@ -174,9 +177,6 @@ const MostWantedList = () => {
                     className="criminal-photo"
                   />
                 <h6 style={{ color: "#ffb463" }}>{selectedCriminal.name}</h6>
-                {/* <IconButton className="wanted-close" onClick={closeModal}>
-                   <CloseIcon />
-                </IconButton> */}
           </div>
             <p><strong style={{ color: "#ffb463" }}>Alias :</strong> {selectedCriminal.alias}</p>
             <p><strong style={{ color: "#ffb463" }}>Description :</strong> {selectedCriminal.description}</p>
@@ -187,10 +187,10 @@ const MostWantedList = () => {
       )}
       {isTipModalOpen && (
         <div className="wanted-modal" onClick={closeTipModal}>
-          <div className="wanted-modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="wanted-close" onClick={closeTipModal}>
-              &times;
-            </span>
+          <div className="wanted-tip-modal-content" onClick={(e) => e.stopPropagation()}>
+            <IconButton className="wanted-close" onClick={closeTipModal}>
+              <CloseIcon/>
+            </IconButton>
             <h6>Give a Tip</h6>
             <textarea
               className="list-textArea"
