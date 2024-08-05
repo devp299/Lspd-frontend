@@ -259,6 +259,7 @@ h1 {
 
   .news-slider__item {
     flex-direction: column;
+    margin-left: auto;
   }
 
   .news-slider__img {

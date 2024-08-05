@@ -183,11 +183,6 @@ const AllAnnouncements = () => {
         ))}
         </TransitionGroup>
       </Box>
-      <Pagination
-        count={Math.ceil(announcements.length / announcementsPerPage)}
-        page={currentPage}
-        onChange={handlePageChange}
-      />
       <Modal open={commentModalOpen} onClose={handleCloseCommentModal}>
         <Box className="modal-comment-content">
           <IconButton className="modal-comment-close" onClick={handleCloseCommentModal}>

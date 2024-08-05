@@ -8,7 +8,14 @@
   background-repeat: no-repeat;
   background-attachment: fixed; */
   /* height: 90%; */
-  width: 100%;
+  /* width: 100%; */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+  position: relative;
+  min-height: 100vh;
   /* z-index: -1; */
   color: white;
   overflow: hidden;
@@ -51,7 +58,7 @@
 
 .job-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  /* grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); */
   gap: 3rem;
   margin: 0 2rem;
   margin-top: 2.5rem;

@@ -1,9 +1,11 @@
 .user-announcements-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  /* display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); */
+  display: flex;
+  flex-direction: column;
   align-items: center; /* Center the cards horizontally */
   gap: 2rem;
-  margin-left: 3.5rem;
+  /* margin-left: 3.5rem; */
   margin-right: auto;
   padding: 2rem;
   background-attachment: fixed;
@@ -62,7 +64,7 @@ video{
   justify-content: center;
   align-items: center;
   width: 600px; /* Adjusted card width */
-  max-width: 90%; /* Responsive max width */
+  max-width: 100%; /* Responsive max width */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   z-index: 2;
   position: relative;
