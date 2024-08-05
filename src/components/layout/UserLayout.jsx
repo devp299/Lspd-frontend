@@ -173,7 +173,7 @@ const AdminLayout = ({ children }) => {
         sx={{
           display: { xs: "block", md: "block" },
           position: "fixed",
-          right: "1rem",
+          left: "2rem",
           top: "1rem",
           zIndex: 1000,
         }}

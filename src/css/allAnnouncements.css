@@ -43,7 +43,6 @@
 }
 
 .announcement-card {
-  display: flex;
   background: linear-gradient(145deg, rgba(26, 26, 26, 0.8), rgba(42, 42, 42, 0.8));
   border: 2px solid #ffb463;
   border-radius: 1rem;
