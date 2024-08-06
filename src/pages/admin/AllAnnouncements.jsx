@@ -33,6 +33,7 @@ const AllAnnouncements = () => {
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
+      console.log('Loading started');
       setLoading(true); // Start loading
       try {
         const response = await getAllAnnouncements();
@@ -46,6 +47,8 @@ const AllAnnouncements = () => {
         console.error('Error fetching announcements:', error);
       }
       setLoading(false); // Stop loading
+      console.log('Loading ended');
+
     };
 
     fetchAnnouncements();
@@ -173,30 +176,31 @@ const AllAnnouncements = () => {
 
   return (
     <AdminLayout>
-      {loading && <div className="loader-admin"></div>} {/* Show loader */}
+      {/* <h1>All Events</h1> */}
       <IconButton sx={{
-          position: "fixed",
-          bottom: "40px",
-          right: "40px",
-          width: "70px",
-          height: "70px",
-          backgroundColor: "#4CAF50",
-          color: "white",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderRadius: "50%",
-          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-          zIndex: "1000",
-          transition: "background-color 0.3s ease, transform 0.2s ease-out",
-          '&:hover': {
-            backgroundColor: "#4CAD12",
-            transform: "scale(1.1)",
-          },
-        }}
-        className="add-job-button"
-        onClick={handleOpenModal}
+        position: "fixed",
+        bottom: "40px",
+        right: "40px",
+        width: "70px",
+        height: "70px",
+        backgroundColor: "#4CAF50",
+        color: "white",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "50%",
+        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
+        zIndex: "1000",
+        transition: "background-color 0.3s ease, transform 0.2s ease-out",
+        '&:hover': {
+          backgroundColor: "#4CAD12",
+          transform: "scale(1.1)",
+        },
+      }}
+      className="add-job-button"
+      onClick={handleOpenModal}
       >
+        {loading && <div className='loader-admin'></div>} {/* Show loader */}
         <AddIcon fontSize='large' />
       </IconButton>
       <Box className="announcements-container">
@@ -252,23 +256,34 @@ const AllAnnouncements = () => {
         onChange={handlePageChange}
       />
       <Modal open={commentModalOpen} onClose={handleCloseCommentModal}>
-        <Box className="modal-comment-content">
-          <IconButton className="modal-comment-close" onClick={handleCloseCommentModal}>
-            <Close />
-          </IconButton>
-          <Box className="comment-list">
-            {comments.map((comment, index) => (
-              <Paper key={index} className="comment-item">
-                <Typography variant="caption" className="comment-username">{comment.userId.username}</Typography>
-                <Typography variant="body1" className='comment-text'>{comment.comment}</Typography>
-                <Typography variant="caption" className='comment-time' >
-                  {moment(comment.createdAt).fromNow()}
-                </Typography>
-              </Paper>
-            ))}
-          </Box>
-        </Box>
-      </Modal>
+  <Box className="modal-comment-content">
+    <IconButton className="modal-comment-close" onClick={handleCloseCommentModal}>
+      <Close />
+    </IconButton>
+    <Box className="comment-list">
+      {comments.length === 0 ? (
+        <Typography variant="body1" className="no-comments">
+          No comments yet
+        </Typography>
+      ) : (
+        comments.map((comment, index) => (
+          <Paper key={index} className="comment-item">
+            <Typography variant="caption" className="comment-username">
+              {comment.userId.username}
+            </Typography>
+            <Typography variant="body1" className="comment-text">
+              {comment.comment}
+            </Typography>
+            <Typography variant="caption" className="comment-time">
+              {moment(comment.createdAt).fromNow()}
+            </Typography>
+          </Paper>
+        ))
+      )}
+    </Box>
+  </Box>
+</Modal>
+
       {selectedAnnouncement && (
         <EditAnnouncementModal
           announcement={selectedAnnouncement}

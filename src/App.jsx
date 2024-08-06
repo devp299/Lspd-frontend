@@ -21,7 +21,7 @@ import MostWantedList from './components/specific/MostWantedList';
 import UserNews from './components/specific/UserNews';
 import UserAllNews from './components/specific/UserAllNews';
 import { server } from './constants/config';
-
+import Demo from './components/Demo';
 
 const LoginSignup = lazy(() => import("./pages/LoginSignup"));
 const Home = lazy(() => import("./pages/Home"));
@@ -86,6 +86,7 @@ const App = () => {
             <Route path='/admin/all-announcements' element={<AllAnnouncements />} />
           </Route>
           <Route element={<ProtectRoute user={user} />}>
+            {/* <Route path='/user/face' element={<Demo />} /> */}
             <Route path='/user' element={<User />} />
             <Route path='/user/announcements' element={<UserNews />} />
             <Route path='/user/all-announcements' element={<UserAllNews />} />

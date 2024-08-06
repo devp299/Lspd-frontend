@@ -43,7 +43,7 @@
 
 .most-wanted-container::before {
   content: '';
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -323,9 +323,117 @@
     /* position: fixed; */
     /* margin-top: 32rem;
     margin-right: 20rem; */
-    top: 1px; 
-    left: 10rem; 
+    top: -10px; 
+    left: 9rem; 
     color: #ffb463;
     cursor: pointer;
   }
+}
+
+.face-recog-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #ffb463;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.face-recog-button:hover {
+  background-color: #ff9a3d;
+}
+
+.wanted-face-modal-content{
+  position: absolute; /* Ensure child elements like the close button are positioned relative to this container */
+  /* top: 5%;
+  left: 30%; */
+  /* display: flex; */
+  /* flex-direction: row; */
+  background-color: #2c2c2c;
+  padding: 20px;
+  border: 2px solid #000;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  /* max-height: 90vh; */
+  text-align: center;
+  box-shadow: 10px 10px 0 #000;
+}
+
+.wanted-face-modal-content button {
+  color:#ffb463;
+}
+
+.wanted-face-modal-content h3{
+  font-size: 3em;
+  color:#ffb463;
+  margin-bottom: 1rem;
+
+}
+/* .matched-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+} */
+
+/* .wanted-modal-content {
+  background: #fff;
+  padding: 20px;
+  position: relative;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 10px;
+} */
+
+.compare-faces {
+  display: flex;
+  align-self: flex-end;
+  width: 40%;
+  padding: 10px;
+  font-size: 1.2em;
+  background-color: #000;
+  color: #ffb463;
+  border: 2px solid #ffb463;
+  border-radius: 5px;
+  text-transform: uppercase;
+  text-align: center;
+  /* box-shadow: 5px 5px 0 #000; */
+  font-family: "Russo One", sans-serif;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.error-message {
+  color: red;
+}
+
+.labelFile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: auto;
+  height: 150px;
+  border: 2px dashed #ffb463;
+  align-items: center;
+  text-align: center;
+  padding: 5px;
+  color: #ffb463;
+  cursor: pointer;
+}
+
+.face-input {
+  max-width: 190px;
+  display: none;
 }

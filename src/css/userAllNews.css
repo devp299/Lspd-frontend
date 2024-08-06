@@ -252,13 +252,9 @@ video{
 
 @media (max-width: 500px) {
   .user-announcements-container{
-  /* display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(390px, 1fr)); */
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the cards horizontally */
-  /* gap: 2rem; */
-  /* padding: 2rem; */
+  align-items: center;
   background-attachment: fixed;
   background-size: cover;
   background-position: center;
@@ -266,4 +262,55 @@ video{
   min-height: 100vh;
   color: #fff;
   }
+    .announcement-card {
+      display: flex;
+      /* min-height: 100vh; */
+      flex-direction: column; /* Stack items vertically */
+      width: 100%; /* Full width for cards */
+      max-width: none; /* Remove max-width restriction */
+      margin: 0 auto; /* Center the cards */
+    }
+  
+    .card-image {
+      width: 100%; /* Full width for the image */
+      height: 200px; /* Adjust height as needed */
+      padding: 0; /* Remove padding */
+      overflow: hidden;
+    }
+  
+    .card-image img {
+      width: 100%; /* Ensure the image covers the container */
+      height: 100%; /* Cover the height of the container */
+      object-fit: cover; /* Maintain aspect ratio */
+    }
+  
+    .card-content {
+      width: 100%; /* Full width for content */
+      padding: 1rem; /* Adjust padding for content */
+    }
+  
+    .card-header h3 {
+      font-size: 1.2rem; /* Adjust font size for better readability */
+    }
+  
+    .card-data p {
+      font-size: 0.8rem; /* Adjust font size for better readability */
+    }
+  
+    .card-footer {
+      display: flex;
+      flex-direction: row; /* Stack footer items vertically */
+      align-items: flex-start; /* Align items to the start */
+      gap: 0.5rem; /* Adjust spacing between items */
+    }
+  
+    .likes-comments {
+      flex-direction: row; /* Stack likes and comments vertically */
+      gap: 0.5rem; /* Adjust spacing between items */
+    }
+  
+    .all-announcement-like,
+    .all-announcement-comment {
+      gap: 0.3rem; /* Adjust gap for icons and text */
+    }
 }

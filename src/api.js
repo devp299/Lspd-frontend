@@ -13,6 +13,7 @@ const API_URL_User_Jobs = `${server}/api/v1/user/jobs`;
 const API_URL_User_Apply = `${server}/api/v1/user/apply`;
 const API_URL_User_Tips = `${server}/api/v1/user`;
 const API_URL_User_List = `${server}/api/v1/user/list`;
+const API_URL_User_faceReco = `${server}/api/v1/user/recognize-face`;
 
 
 export const getToken = localStorage.getItem('user-token') ; // Adjust according to your storage mechanism
@@ -189,6 +190,25 @@ export const createListItem = async (listData) => {
   } catch (error) {
     // console.error('Error creating wanted list:', error);
     // throw error;
+  }
+};
+
+export const recognizeFace = async (imageFile) => {
+  try {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const response = await axios.post(API_URL_User_faceReco, formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('user-token')}`, // Include token in the header if needed
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error recognizing face:', error);
+    throw error;
   }
 };
 

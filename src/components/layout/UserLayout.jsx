@@ -34,7 +34,7 @@ const adminTabs = [
     name: "Careers",
     path: "/user/career",
     icon: <WorkIcon />
-  },
+  }
 ];
 
 const SideBar = ({ w }) => {
