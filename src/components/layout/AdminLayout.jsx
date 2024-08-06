@@ -52,7 +52,7 @@ const SideBar = ({ w = "100%" }) => {
 
   const logoutHandler = () => {
     dispatch(adminNotExists());
-    navigate('/login');
+    navigate('/');
     toast.success("Logged out Successfully.");
   };
 
@@ -69,8 +69,8 @@ const SideBar = ({ w = "100%" }) => {
   };
 
   return (
-    <Stack width={w} direction={"column"} p={"2rem"} spacing={"3rem"} bgcolor="#1a1a1a" minHeight="100vh">
-      <Typography position={"fixed"} fontFamily={"Russo One"} variant='h5' color="#ffb463" textTransform={"uppercase"}>LSPD</Typography>
+    <Stack width={w} direction={"column"} p={"2rem"} spacing={"4rem"} bgcolor="#1a1a1a" minHeight="100vh">
+      <Typography position={"fixed"} fontFamily={"Russo One"} variant='h5' color="#ffb463" textTransform={"uppercase"}>Havoc-Hunters</Typography>
       <Stack position={"fixed"} spacing={"1.5rem"} mt="3rem">
         {adminTabs.map((tab) => (
           <StyledLink

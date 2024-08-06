@@ -63,7 +63,7 @@ const SideBar = ({ w }) => {
 
   return (
     <Stack width={w} direction={"column"} p={"2rem"} spacing={"4rem"} bgcolor="#1a1a1a" minHeight="100vh">
-      <Typography position={"fixed"} fontFamily={"Russo One"} variant='h5' color="#ffb463" textTransform={"uppercase"}>LSPD</Typography>
+      <Typography position={"fixed"} fontFamily={"Russo One"} variant='h5' color="#ffb463" textTransform={"uppercase"}>Havoc-Hunters</Typography>
       <Stack position={"fixed"} spacing={"2rem"} mt="2rem">
         {adminTabs.map((tab) => (
           <StyledLink
