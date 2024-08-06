@@ -16,7 +16,7 @@ const FaceRecognitionModal = ({ onClose }) => {
 
   useEffect(() => {
     const loadModels = async () => {
-      const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
+      const MODEL_URL = '/weights';
       try {
         await faceapi.loadSsdMobilenetv1Model(MODEL_URL);
         await faceapi.loadFaceLandmarkModel(MODEL_URL);
