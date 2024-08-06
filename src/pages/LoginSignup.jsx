@@ -152,9 +152,9 @@ const LoginSignup = () => {
       {role && !showPasskeyContainer && (
         <div className="container active" id="mainContainer">
           <div className="form-container">
-            <div className="logo">
+            {/* <div className="logo">
               <img src={GTA5_logo} alt="GTA 5 Logo" />
-            </div>
+            </div> */}
             <div className={`form-box ${activeForm === 'login' ? 'active' : ''}`} id="loginForm">
               <h2>Login</h2>
               <form onSubmit={handleLoginSubmit}>

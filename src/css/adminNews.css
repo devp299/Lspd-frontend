@@ -209,7 +209,7 @@
 .view-all-admin-btn {
   position: absolute;
   top: 1px;
-  right: 60px;
+  right: 0px;
   background-color: #ffb463;
   color: #000;
   border: none;

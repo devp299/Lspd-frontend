@@ -162,9 +162,9 @@ const AdminWantedList = () => {
                   <div className="wanted-image-container" onClick={() => handleImageClick(wanted.image.url)}>
                     <img src={wanted.image.url} alt={wanted.name} className="wanted-image" />
                     <div className='details-container'>
-                      <p className="wanted-alias"><strong>Alias:</strong> {wanted.alias}</p>
-                      <p className="wanted-last-seen"><strong>Last Seen:</strong> {wanted.lastSeen}</p>
-                      <p className="wanted-crimes"><strong>Crimes:</strong> {wanted.crimes}</p>
+                      <p className="wanted-alias"><a>Alias:</a> {wanted.alias}</p>
+                      <p className="wanted-last-seen"><a>Last Seen:</a> {wanted.lastSeen}</p>
+                      <p className="wanted-crimes"><a>Crimes:</a> {wanted.crimes}</p>
                     </div>
                   </div>
 

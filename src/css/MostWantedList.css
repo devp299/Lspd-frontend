@@ -331,12 +331,13 @@
 }
 
 .face-recog-button {
-  position: fixed;
-  top: 20px;
+  position: absolute;
+  top: 9rem;
   right: 20px;
   background-color: #ffb463;
   color: #000;
-  border: none;
+  box-shadow: 5px 5px 0 black;
+  /* border: none; */
   padding: 10px 20px;
   font-size: 1em;
   cursor: pointer;

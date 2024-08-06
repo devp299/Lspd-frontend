@@ -110,9 +110,9 @@ const MostWantedList = () => {
         Your browser does not support the video tag.
       </video>
       <h1>Los Santos Most Wanted</h1>
-      {/* <button className="face-recog-button" onClick={() => setIsFaceRecogModalOpen(true)}>
+      <button className="face-recog-button" onClick={() => setIsFaceRecogModalOpen(true)}>
         Face Recognition
-      </button> */}
+      </button>
       <input
         type="text"
         value={searchQuery}

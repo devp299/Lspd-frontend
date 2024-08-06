@@ -14,11 +14,13 @@ import Transition from '../hooks/Transition';
 const ParallaxEffect = () => {
   const navigate = useNavigate();
   const [showTransition, setShowTransition] = useState(true);
+  // Uncomment and use openList state if needed
+  // const [openList, setOpenList] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowTransition(false);
-    }, 3000); // 2 seconds duration for the transition
+    }, 3000); // 3 seconds duration for the transition
 
     return () => clearTimeout(timer); // Clear the timeout if the component unmounts
   }, []);
@@ -55,7 +57,7 @@ const ParallaxEffect = () => {
           style={{
             backgroundImage: `url(${homepage})`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: 'top 30%', // Adjust the position to hide the upper 30%
             height: "130vh"
           }}
         >
@@ -110,7 +112,6 @@ const ParallaxEffect = () => {
           </div>
           
         </ParallaxLayer>
-      
 
         {/* Article Content */}
         <ParallaxLayer
@@ -134,7 +135,6 @@ const ParallaxEffect = () => {
         </ParallaxLayer>
 
       </Parallax>
-
       {/* {openList && <LoginSignup/>} */}
     </div>
   );
